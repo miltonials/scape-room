@@ -1,13 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scape room</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/mobile.css">
+  <link rel="stylesheet" href="./styles/modals.css">
 </head>
+
 <body>
+  <header>
+    <h1>Scape room</h1>
+  </header>
+  <main class="game-container">
+    <section class="btns-container">
+      <button name="btn_firs_strategy" class="btn" id="btn_backtracking"
+        onclick="cambioEstrategia(true)">First strategy</button>
+      <button name="btn_second_strategy" class="btn active" id="btn_estrella"
+        onclick="cambioEstrategia(false)">Second strategy</button>
+      <button name="btn_run" class="btn" id="btn_run">Run</button>
+    </section>
+    <section class="room" id="room">
+      <div class="row">
+        <div id="frame_0_0" class="roomElement">
+          <p class="frame_content">🚧</p>
+        </div>
+        <div id="frame_0_1" class="roomElement">
+          <p class="frame_content">🚧</p>
+        </div>
+      </div>
+      <div class="row">
+        <div id="frame_1_0" class="roomElement">
+          <p class="frame_content">😀</p>
+        </div>
+        <div id="frame_1_1" class="roomElement">
+          <p class="frame_content">🚧</p>
+        </div>
+      </div>
+    </section>
+    <aside>
+      <section>
+        <h1>
+          Data
+        </h1>
+        <section id="logs-history">
+          <div id="logs-container">
+            <p>Without executions</p>
+          </div>
+        </section>
+        <br />
+        <section class="btns-container">
+          <button name="how_to_play" class="btn" id="how_to_play">
+              <a href="https://github.com/miltonials/scape-room" target="_blank">
+              ¿How to play?
+            </a>
+            </button>
+          <button name="settings-btn" class="btn" id="settings-btn">Settings</button>
+        </section>
+      </section>
+    </aside>
+  </main>
+  <script src="./js/modals/controller.js"></script>
+  <script src="./js/modals/customModals.js"></script>
   <script src="./js/main.js"></script>
 </body>
+
 </html>

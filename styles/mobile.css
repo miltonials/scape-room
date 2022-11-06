@@ -22,7 +22,13 @@ body {
   color: #fafafa;
 }
 
+header {
+  border-bottom: 1px solid var(--hover);
+  margin: 0 0 1rem 0;
+}
+
 a {
+  display: flex;
   text-decoration: none;
   color: var(--main-bg-color);
 }
@@ -35,13 +41,20 @@ a {
 
 .btns-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
+}
+
+.limit-container {
+  width: 100%;
 }
 
 .room {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
 }
 
@@ -54,10 +67,7 @@ aside h1 {
   border-radius: 5px;
   margin: 2px;
   height: 50px;
-  width: 100%;
-}
-
-button {
+  width: 90%;
   background: var(--btn-color);
   border: 2px solid;
   font: inherit;
@@ -70,7 +80,8 @@ button {
   background-color: var(--hover-shadow-color);
   box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
   transform: translateY(-0.10em);
-  border: none
+  border: none;
+  cursor: pointer;
 }
 
 .aside {
@@ -87,22 +98,20 @@ button {
 }
 
 /* ESTILOS TABLERO */
-.room {
-  border : 1px solid red
-}
 
 .row {
   display: flex;
   flex-direction: row;
-  border: 1px solid green;
+  /* border: 1px solid green; */
 }
 
 .roomElement {
   width: 62px;
   height: 62px;
+  border: 1px solid var(--secondary-bg-color);
 }
 
-.frame_content {
+.frame-content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -112,10 +121,80 @@ button {
   height: 100%;
 }
 
-#logs-history {
-  height: 198px;
-  overflow: scroll;
-  border: #74caff 1px solid;
+.settings-container {
+  display: none
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  height: 200px;
+  max-width: 100%;
+  padding: 20px;
   border-radius: 5px;
-  padding: 25px;
+  border: #74caff 1px solid;
+}
+
+.rows-container {
+  overflow: scroll;
+}
+
+.rows-container>*>* {
+  border: 1px solid var(--secondary-bg-color);
+}
+
+.table::-webkit-scrollbar-button:increment,
+.table::-webkit-scrollbar-button {
+  display: none;
+}
+
+.table-titles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 650;
+  /* width: 100%; */
+}
+
+.table-titles>* {
+  border: none;
+}
+
+.table-row {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+}
+
+.table-row>* {
+  width: calc(100% / 4);
+  height: 22px;
+}
+
+
+
+/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
+
+.rows-container::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.rows-container::-webkit-scrollbar:vertical {
+  width:10px;
+  border-radius: 20px;
+  background-color: var(--secondary-bg-color);
+}
+
+.rows-container::-webkit-scrollbar-thumb {
+  background-color: var(--btn-color);
+  border-radius: 20px;
 }

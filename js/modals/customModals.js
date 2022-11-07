@@ -46,7 +46,7 @@ config_btn.addEventListener("click", () => {
           </div>
         </form>
         <div class="btns-container limit-container">
-          <button class="btn save">Save settings</button>
+          <button class="btn save" onclick="crearTablero(10)">Save settings</button>
         </div>
       </section>
   `);

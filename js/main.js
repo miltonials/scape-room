@@ -1,21 +1,35 @@
-let matrix = []
+let matrix = [];
 let dimensions = 0;
-let obstacles = 15*15*0.20
+let obstacles = 0;
 
 function creationMatrix() {
-    for (var i = 0; i < dimensions; i++) {
+    // let porcentaje = (obstacles/100)*dimensions*dimensions
+    for (let i = 0; i < dimensions; i++) {
         matrix[i] = [];
-        for (var j = 0; j < dimensions; j++) {
-            //generar num random 0 a 1 
-            let random = Math.random();
-            if (random < 0.2 && 0 < obstacles ) {
-                if ((!(i == 0) && !(j == 1)) && (!(i == 1) && !(j == 0))) {
-                    matrix[i][j] = 1;
-                    obstacles--;
-                }
+        for (let j = 0; j < dimensions; j++) {
+            matrix[i][j] = 0;
+        }
+    }
+    let randomfila = 0;
+    let randomcolumna = 0;
+    if (obstacles > 0){
+        if (obstacles > dimensions*dimensions){
+            alert("No se pueden colocar tantos obstáculos")
+            return
+        }
+        // obstacles no debe ser mayor a 30%
+        if (obstacles > (dimensions*dimensions)*0.30){
+            alert("No se pueden colocar tantos obstáculos")
+            return
+        }
+        for (let i = 0; i < obstacles; i++) {
+            randomfila = Math.floor(Math.random() * dimensions);
+            randomcolumna = Math.floor(Math.random() * dimensions);
+            if (matrix[randomfila][randomcolumna] == 1){
+                i--;
             }
-            else {
-                matrix[i][j] = 0;
+            else{
+                matrix[randomfila][randomcolumna] = 1;
             }
         }
     }
@@ -23,14 +37,12 @@ function creationMatrix() {
 
 
 /** 
- * Función que permite crear el tablero mxm. Donde m = dimensiones y pertence a {2, 3, 4, 5}
+ * Función que permite crear el tablero mxm. Donde m = dimensiones 
  * @param {int} dimensiones 
  */
  function creationMap() {
     dimensions = document.getElementById("dimensions").value;
     obstacles = document.getElementById("obstacles").value;
-    console.log(dimensions)
-    console.log(obstacles)
     creationMatrix()
     let tablero_container = document.getElementById("room-container");
     let tableroHTML = "";
@@ -53,13 +65,13 @@ function creationMatrix() {
             tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
             continue
         }
-        if (matrix[i][j] == 0){
-            let letra =  `<p class="frame-content"></p>`
+        if (matrix[i][j] == 1){
+            let letra =  `<p class="frame-content">🚧</p>`
             tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
             continue
         }
         else{
-            let letra =  `<p class="frame-content">🚧</p>`
+            let letra =  `<p class="frame-content"></p>`
             tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
         }
             

@@ -1,6 +1,21 @@
 let matrix = [];
 let dimensions = 0;
 let obstacles = 0;
+let population = [];
+
+function initialPopulation() {
+
+    let amount = document.getElementById("iPopulation").value;
+
+    while (amount != 0) {
+        let person = new Individual(document.getElementById("adn").value);
+        population.push(person);
+        amount--;
+    }
+
+    console.log(population);
+}
+
 
 function creationMatrix() {
     // let porcentaje = (obstacles/100)*dimensions*dimensions
@@ -33,6 +48,7 @@ function creationMatrix() {
             }
         }
     }
+    initialPopulation()
 }
 
 
@@ -91,3 +107,5 @@ function creationMatrix() {
     tablero_container.appendChild(modalContentEl);
     
  }
+
+

@@ -1,11 +1,10 @@
 // clase individio 
 
-class Individio{
-    constructor(finest, distancia, pasos, estado, ADN){
-        this.finest = finest
-        this.distancia = distancia
-        this.pasos = pasos
-        this.estado = estado
+class Individual{
+    constructor(ADN){
+        this.finest = 0
+        this.distancia = 0
+        this.estado = true
         this.ADN = ADN
     }
 
@@ -27,11 +26,7 @@ class Individio{
 
 // clase Table
 class Table{
-    // matriz
-    // posicionInicial
-    // posicionFinal
-    // individios  
-    constructor(dimenciones, posicionInicial, posicionFinal, individio){
+    constructor(posicionInicial, posicionFinal, individio){
         this.matriz = 
         this.posicionInicial = posicionInicial
         this.posicionFinal = posicionFinal
@@ -42,9 +37,6 @@ class Table{
 
 // class FinalRoom
 class FinalRoom{
-    // posicionInicial
-    // posicionFinal
-    // individio
     constructor(){
     }
 }

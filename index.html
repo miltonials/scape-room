@@ -22,24 +22,9 @@
         <button name="btn-second-strategy" class="btn" id="btn-estrella">Second strategy</button>
         <button name="btn-run" class="btn" id="btn-run">Run</button>
       </section>
-      <section class="room-container center" id="room-container">
+      <section class="room-container" id="room-container">
         <div class="room" id="room">
-          <div class="row">
-            <div id="frame-0-0" class="roomElement">
-              <p class="frame-content">🚧</p>
-            </div>
-            <div id="frame-0-1" class="roomElement">
-              <p class="frame-content">🚪</p>
-            </div>
-          </div>
-          <div class="row">
-            <div id="frame-1-0" class="roomElement">
-              <p class="frame-content">😀</p>
-            </div>
-            <div id="frame-1-1" class="roomElement">
-              <p class="frame-content">🚧</p>
-            </div>
-          </div>
+          <!-- insert here the game grid -->
         </div>
       </section>
     </section>
@@ -54,9 +39,9 @@
             </div>
           </div>
           <div class="center">
-            <h3>Number of obstacles</h3>
+            <h3>Porcentaje of obstacles</h3>
             <div class="spinner-container">
-              <input class="spinner" type="number" id="obstacles" name="obstacles" min="10" max="30">
+              <input class="spinner" type="number" id="obstacles" name="obstacles" value="1" min="1" max="15">%
             </div>
           </div>
           <div class="center">
@@ -88,7 +73,7 @@
           </div>
         </form>
       </section>
-      <section>
+      <section class="execution-data-container">
         <br />
         <h1>
           Execution data

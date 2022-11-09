@@ -3,7 +3,7 @@ let dimensions = 0;
 let obstacles = 0;
 
 function creationMatrix() {
-    // let porcentaje = (obstacles/100)*dimensions*dimensions
+    let porcentaje = (obstacles/100)*dimensions*dimensions
     for (let i = 0; i < dimensions; i++) {
         matrix[i] = [];
         for (let j = 0; j < dimensions; j++) {
@@ -22,7 +22,7 @@ function creationMatrix() {
             alert("No se pueden colocar tantos obstáculos")
             return
         }
-        for (let i = 0; i < obstacles; i++) {
+        for (let i = 0; i < porcentaje; i++) {
             randomfila = Math.floor(Math.random() * dimensions);
             randomcolumna = Math.floor(Math.random() * dimensions);
             if (matrix[randomfila][randomcolumna] == 1){

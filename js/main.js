@@ -108,4 +108,51 @@ function creationMatrix() {
     
  }
 
+/**
+ * receives 2 chromosomes and returns a new chromosome
+ * @param {string} dna1 
+ * @param {string} dna2 
+ * @returns {string} new chromosome
+ */
+function crossing(dna1, dna2){
+    let childDNA = "";
+    
+    let half = parseInt(dna1.length/2); //get first half of the dna
+    let half2 = parseInt(dna2.length/2); //get second half of the dna
+    
+    childDNA = dna1.substring(0, half) + dna2.substring(half2, dna2.length);
+    return childDNA;
+}
 
+//retorna un cromosoma hibrido con la combinacion de 3 cromosomas del padre y el resto de la madre
+function crossingV2(dna1, dna2){
+    //get random number between 0 and dna1.length-1
+    let random = 0;
+    let childDNA = "";
+    let chromosome = "";
+
+    //get 3 chromosomes from father
+    for(let i = 0; i<3; i++){
+        random = Math.floor(Math.random() * dna1.length-1);
+        childDNA += dna1[random];
+        chromosome += dna1.charAt(random);
+    }
+
+    //get the rest of the chromosomes from mother, in inverse order (right to left)
+    let repited = 0;
+    for(let i = dna2.length-1; i>=0; i--){
+        if(i==2){
+            childDNA += chromosome;
+            i-=3;
+        }
+        if(!chromosome.includes(dna2[i]) && repited<3){ //only add chromosomes that are not in the father's chromosome (quite first 3 chromosomes repited)
+            repited++;
+            childDNA += dna2[i];
+        }else{
+            childDNA += dna2[i];
+        }
+    }
+
+    return childDNA;
+    
+}

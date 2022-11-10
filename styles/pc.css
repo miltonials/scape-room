@@ -26,6 +26,8 @@ header {
 }
 
 .roomElement {
+  display: flex;
+  flex-wrap: wrap;
   overflow: auto;
   min-height: 45px;
   min-width: 45px;

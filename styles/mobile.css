@@ -5,6 +5,8 @@
   --hover-shadow-color: #99ce39;
   --hover: #74caff;
   --active: #03091e;
+  --obstacle: #44334f;
+  --exit: #f7f94c;
 }
 
 * {
@@ -54,9 +56,6 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
-  /* width: 100%;
-  height: 100%; */
 }
 
 aside h1 {
@@ -108,7 +107,7 @@ aside h1 {
   /* border: 1px solid green; */
 }
 
-.room-container{
+.room-container {
   width: 100vw;
 }
 
@@ -123,7 +122,7 @@ aside h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 200%;
+  font-size: 100%;
   font-weight: 650;
   /* width: 100%;
   height: 100%; */
@@ -186,9 +185,31 @@ aside h1 {
 .table-row>* {
   width: calc(100% / 4);
   height: 22px;
+  text-align: center;
+  height: 25px;
 }
 
+.dna {
+  display: block;
+  overflow: auto;
+}
 
+.circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 1px;
+}
+
+.obstacle {
+  background-color: var(--obstacle);
+  justify-content: center;
+}
+
+.goal {
+  background-color: var(--exit);
+  justify-content: center;
+}
 
 /* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
 
@@ -197,7 +218,7 @@ aside h1 {
 }
 
 .rows-container::-webkit-scrollbar:vertical {
-  width:10px;
+  width: 10px;
   border-radius: 20px;
   background-color: var(--secondary-bg-color);
 }
@@ -208,7 +229,7 @@ aside h1 {
 }
 
 .room-container::-webkit-scrollbar {
-  width:10px;
+  width: 10px;
   height: 10px;
   border-radius: 20px;
   background-color: var(--secondary-bg-color);
@@ -220,13 +241,30 @@ aside h1 {
 }
 
 .roomElement::-webkit-scrollbar {
-  width:2px;
+  width: 2px;
   height: 2px;
   border-radius: 20px;
   background-color: var(--secondary-bg-color);
 }
 
 .roomElement::-webkit-scrollbar-thumb {
+  background-color: var(--btn-color);
+  border-radius: 2px;
+}
+
+.table-element::-webkit-scrollbar-thumb {
+  background-color: var(--btn-color);
+  border-radius: 20px;
+}
+
+.table-element::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  border-radius: 20px;
+  background-color: var(--secondary-bg-color);
+}
+
+.table-element::-webkit-scrollbar-thumb {
   background-color: var(--btn-color);
   border-radius: 2px;
 }

@@ -2,6 +2,7 @@ let matrix = [];
 let dimensions = 0;
 let obstacles = 0;
 let population = [];
+let generation = 0;
 
 function initialPopulation() {
 
@@ -14,7 +15,7 @@ function initialPopulation() {
         // generar un color random usando hexadecimal
         let randomColor = Math.floor(Math.random()*16777215).toString(16);
         let adn = document.getElementById("adn").value.toUpperCase()
-        let person = new Individual(adn, randomColor);        
+        let person = new Individual("individual-" + amount, adn, randomColor);        
         population.push(person);
         amount--;
     }
@@ -63,9 +64,11 @@ function creationMatrix() {
  * @param {int} dimensiones 
  */
  function creationMap() {
+    generation = 1
     dimensions = document.getElementById("dimensions").value;
     obstacles = document.getElementById("obstacles").value;
     creationMatrix()
+    updateGeneration()
     let tablero_container = document.getElementById("room-container");
     let tableroHTML = "";
     let numeros = [];
@@ -78,24 +81,24 @@ function creationMatrix() {
       tableroHTML += `<div class="row">`;
       for (let j = 0; j < dimensions; j++) {
         if (i == dimensions-1 && j == dimensions-1 ){
-            let letra =  `<p class="frame-content">🚪</p>`
-            tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
+            let letra =  `<p class="frame-content"></p>`
+            tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement goal">` + letra + `</div>`;
             break
         }
         if (i == 0 && j == 0 ){
             let letra =  ``
+            let miIndividual
             for (k in population) {
-                let miIndividual = population[k]
-                letra +=  `<p class="frame-content" style="color:#`+miIndividual.color+`">•</p>`
+                miIndividual = population[k]
+                letra +=  `<p class="frame-content circle" style="background-color:#`+miIndividual.color+`">😀</p>`
+                generateStatistics(miIndividual)
             }
             tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
-            // let letra =  `<p class="frame-content">😀</p>`
-            // tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;            tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
             continue
         }
         if (matrix[i][j] == 1){
-            let letra =  `<p class="frame-content">🚧</p>`
-            tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
+            let letra =  `<p class="frame-content"></p>`
+            tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement obstacle">` + letra + `</div>`;
             continue
         }
         else{
@@ -212,8 +215,28 @@ function liveIndividuals(){
             break
         }
     }
+    if (!live){
+        generation++
+        updateGeneration()
+        // AQUÍ ES CUANDO SE DEBE CREAR LA NUEVA POBLACIÓN
+        // SE REALIZA EL CRUCE DE LOS INDIVIDUOS
+    }
     return live
 }
+
+function updateGeneration(){
+    let tittle = document.getElementById("generation-counter")
+    const newTitle = createCustomElement(
+        "h1",
+        {
+            id: "generation-counter"
+        },
+        ["Execution data (" + generation + "° generation)"]
+        )
+    tittle.removeChild(tittle.childNodes[0])
+    tittle.appendChild(newTitle)
+}
+
 
 function printIndividuals() {
     let miIndividual
@@ -222,6 +245,7 @@ function printIndividuals() {
     let div
     let finalX
     let finalY
+    let individualView
     for (i in population) {
         miIndividual = population[i]
         axisX = miIndividual.axisX
@@ -242,33 +266,29 @@ function printIndividuals() {
         }
 
         if (miIndividual.live){
-            const modalContentEl = createCustomElement(
+            individualView = createCustomElement(
                 "p",
                 {
-                  style: "color:#"+miIndividual.color,
-                  class: "frame-content",
+                  style: "background-color:#"+miIndividual.color,
+                  class: "frame-content circle",
                 },
-                ["•"]
+                ["😀"]
               )
-            div.appendChild(modalContentEl);
-            // div.appendChild(`<p class="frame-content" style="color:#`+miIndividual.color+`">•</p>`)
-            finalX = axisX
-            finalY = axisY
         }
         else{
-            const modalContentEl = createCustomElement(
+            individualView = createCustomElement(
                 "p",
                 {
-                  style: "color:#"+miIndividual.color,
-                  class: "frame-content",
+                  style: "background-color:#"+miIndividual.color,
+                  class: "frame-content circle",
                 },
-                ["X"]
+                ["☠️"]
               )
-            div.appendChild(modalContentEl);
-            // div.appendChild(`<p class="frame-content" style="color:#`+miIndividual.color+`">X</p>`)
-            finalX = axisX
-            finalY = axisY
-        }
+            }
+        div.appendChild(individualView);
+        finalX = axisX
+        finalY = axisY
+        generateStatistics(miIndividual)
     }
     div = document.getElementById("frame-" + finalY + "-" + finalX)
     let childs = div.childNodes
@@ -278,19 +298,51 @@ function printIndividuals() {
 
 }
 
+function generateStatistics(miIndividual){
+    let div = document.getElementById(miIndividual.id)
+    let table = document.getElementById("rows-container")
+    let stats = ''
+
+    if (div != null){
+        div.remove()
+    }
+
+    stats = '<p class="table-element" style=background-color:#'+miIndividual.color+'>'
+    if (miIndividual.live){
+        stats += '😀' + miIndividual.id 
+    }
+    else{
+        stats += '☠️' + miIndividual.id 
+    }
+
+    stats += '<p class="table-element center dna">'+miIndividual.ADN+'</p>'
+    stats += '<p class="table-element center">'+miIndividual.distancia+'</p>'
+    stats += '<p class="table-element center">'+miIndividual.fitness+'</p>'
+
+    let individualView = createCustomElement(
+        "p",
+        {
+            id: miIndividual.id,
+            class: "table-row center",
+        },
+        [stats]
+    )
+
+    table.appendChild(individualView);
+}
 
 function validateADN(){
     let isValid = false
     let movi = ["W" ,"A","S","D"]
     for (Indi in population){
         for (chromosome in population[Indi].ADN){
-            console.log(population[Indi].ADN[chromosome])
+            // console.log(population[Indi].ADN[chromosome])
             let char = population[Indi].ADN[chromosome]
             if (!movi.includes(char)){//.toUpperCase()
                 isValid = true
             }
         }
     }
-    console.log(isValid)
+    // console.log(isValid)
     return isValid
 }

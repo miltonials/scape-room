@@ -1,7 +1,8 @@
 // clase individio 
 
 class Individual{
-    constructor(ADN, color){
+    constructor(id, ADN, color){
+        this.id = id
         this.color = color
         this.fitness = 0
         this.distancia = 0

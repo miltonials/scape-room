@@ -125,7 +125,7 @@ function crossing(dna1, dna2){
 }
 
 //retorna un cromosoma hibrido con la combinacion de 3 cromosomas del padre y el resto de la madre
-function crossingV2(dna1, dna2){
+function crossingComplex(dna1, dna2){
     //get random number between 0 and dna1.length-1
     let random = 0;
     let childDNA = "";
@@ -133,17 +133,21 @@ function crossingV2(dna1, dna2){
 
     //get 3 chromosomes from father
     for(let i = 0; i<3; i++){
-        random = Math.floor(Math.random() * dna1.length-1);
+        //random between 0 and dna1.length-1
+        random = Math.floor(Math.random() * dna1.length);
         childDNA += dna1[random];
         chromosome += dna1.charAt(random);
     }
 
     //get the rest of the chromosomes from mother, in inverse order (right to left)
     let repited = 0;
-    for(let i = dna2.length-1; i>=0; i--){
+    for(let i = dna2.length-1; i>0; i--){
         if(i==2){
             childDNA += chromosome;
-            i-=3;
+            i-=2;
+        }
+        if(dna2[i] == undefined){ //for prevent undefined
+            break;
         }
         if(!chromosome.includes(dna2[i]) && repited<3){ //only add chromosomes that are not in the father's chromosome (quite first 3 chromosomes repited)
             repited++;
@@ -152,7 +156,6 @@ function crossingV2(dna1, dna2){
             childDNA += dna2[i];
         }
     }
-
     return childDNA;
     
 }

@@ -6,9 +6,15 @@ let population = [];
 function initialPopulation() {
 
     let amount = document.getElementById("iPopulation").value;
-
+    population = [];
     while (amount != 0) {
-        let person = new Individual(document.getElementById("adn").value);
+// crear un random de 0 a 8
+        // let random = Math.floor(Math.random() * circles.length);
+        // let color = circles[random];
+        // generar un color random usando hexadecimal
+        let randomColor = Math.floor(Math.random()*16777215).toString(16);
+        let adn = document.getElementById("adn").value.toUpperCase()
+        let person = new Individual(adn, randomColor);        
         population.push(person);
         amount--;
     }
@@ -77,8 +83,14 @@ function creationMatrix() {
             break
         }
         if (i == 0 && j == 0 ){
-            let letra =  `<p class="frame-content">😀</p>`
+            let letra =  ``
+            for (k in population) {
+                let miIndividual = population[k]
+                letra +=  `<p class="frame-content" style="color:#`+miIndividual.color+`">•</p>`
+            }
             tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
+            // let letra =  `<p class="frame-content">😀</p>`
+            // tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;            tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
             continue
         }
         if (matrix[i][j] == 1){
@@ -158,4 +170,127 @@ function crossingComplex(dna1, dna2){
     }
     return childDNA;
     
+}
+
+//Funcion sleep tomada de https://www.delftstack.com/howto/javascript/javascript-wait-for-x-seconds/
+/**
+ * Función que permite pausar la ejecución del programa por un tiempo determinado
+ *
+ * @param {int} ms | tiempo en milisegundos que se espera
+ * @return {object} 
+ */
+ function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+
+async function run(){
+    console.log("run")
+    if (population.length == 0){
+        alert("No hay población")
+        return
+    } 
+    if (matrix.length == 0){
+        alert("No hay matriz")
+        return
+    }
+    if (validateADN()){
+        alert("El ADN unicamente debe permitir W,A,S,D")
+        return
+    }
+    while (liveIndividuals()){
+        await sleep(500)
+        printIndividuals()
+    }
+}
+
+function liveIndividuals(){
+    let live = false
+    for (let i = 0; i < population.length; i++) {
+        if (population[i].live){
+            live = true
+            break
+        }
+    }
+    return live
+}
+
+function printIndividuals() {
+    let miIndividual
+    let axisX
+    let axisY
+    let div
+    let finalX
+    let finalY
+    for (i in population) {
+        miIndividual = population[i]
+        axisX = miIndividual.axisX
+        axisY = miIndividual.axisY
+        div = document.getElementById("frame-" + axisY + "-" + axisX)
+        let childs = div.childNodes
+        if (childs.length > 0) {
+            div.removeChild(childs[0])
+        }
+
+        miIndividual.nextStep()
+        axisX = miIndividual.axisX
+        axisY = miIndividual.axisY   
+        div = document.getElementById("frame-" + axisY + "-" + axisX)
+        // document.body.appendChild(modalContentEl);
+        if (matrix[axisX][axisY] == 1) {
+            miIndividual.live = false
+        }
+
+        if (miIndividual.live){
+            const modalContentEl = createCustomElement(
+                "p",
+                {
+                  style: "color:#"+miIndividual.color,
+                  class: "frame-content",
+                },
+                ["•"]
+              )
+            div.appendChild(modalContentEl);
+            // div.appendChild(`<p class="frame-content" style="color:#`+miIndividual.color+`">•</p>`)
+            finalX = axisX
+            finalY = axisY
+        }
+        else{
+            const modalContentEl = createCustomElement(
+                "p",
+                {
+                  style: "color:#"+miIndividual.color,
+                  class: "frame-content",
+                },
+                ["X"]
+              )
+            div.appendChild(modalContentEl);
+            // div.appendChild(`<p class="frame-content" style="color:#`+miIndividual.color+`">X</p>`)
+            finalX = axisX
+            finalY = axisY
+        }
+    }
+    div = document.getElementById("frame-" + finalY + "-" + finalX)
+    let childs = div.childNodes
+    if (childs.length > 0) {
+        div.removeChild(childs[0])
+    }
+
+}
+
+
+function validateADN(){
+    let isValid = false
+    let movi = ["W" ,"A","S","D"]
+    for (Indi in population){
+        for (chromosome in population[Indi].ADN){
+            console.log(population[Indi].ADN[chromosome])
+            let char = population[Indi].ADN[chromosome]
+            if (!movi.includes(char)){//.toUpperCase()
+                isValid = true
+            }
+        }
+    }
+    console.log(isValid)
+    return isValid
 }

@@ -71,19 +71,47 @@ class Individual{
         w = distance*steps
 
         //setting fitness
-        this.fitness = w/100
+        this.fitnes
+        s = w/100
     }
 
+    /**
+     * method performing the following movement of the individual
+     */
     nextStep() {
         let movi = ["W" ,"A","S","D"]
         let moviX = [0, -1, 0, 1]
         let moviY = [-1, 0, 1, 0]
-        if (this.distancia < this.ADN.length){
-            let mov = this.ADN[this.distancia]
+        if (this.live){
+            if (this.distancia < this.ADN.length){
+                let mov = this.ADN[this.distancia]
+                let index = movi.indexOf(mov)
+                this.axisX += moviX[index]
+                this.axisY += moviY[index]
+                this.distancia += 1
+            }
+            else{
+                this.live = false
+            }   
+        } 
+        else{
+            this.estado = false
+        }
+    }
+
+    /**
+     * method performing the above movement of the individual
+     */
+    previousStep() {
+        let movi = ["W" ,"A","S","D"]
+        let moviX = [0, -1, 0, 1]
+        let moviY = [-1, 0, 1, 0]
+        if (this.distancia > 0){
+            let mov = this.ADN[this.distancia-1]
             let index = movi.indexOf(mov)
-            this.axisX += moviX[index]
-            this.axisY += moviY[index]
-            this.distancia += 1
+            this.axisX -= moviX[index]
+            this.axisY -= moviY[index]
+            this.distancia -= 1
         }
         else{
             this.live = false

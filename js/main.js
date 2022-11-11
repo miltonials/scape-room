@@ -243,52 +243,59 @@ function printIndividuals() {
     let axisX
     let axisY
     let div
-    let finalX
-    let finalY
+    let finalX = 0
+    let finalY = 0
     let individualView
     for (i in population) {
         miIndividual = population[i]
-        axisX = miIndividual.axisX
-        axisY = miIndividual.axisY
-        div = document.getElementById("frame-" + axisY + "-" + axisX)
-        let childs = div.childNodes
-        if (childs.length > 0) {
-            div.removeChild(childs[0])
-        }
-
-        miIndividual.nextStep()
-        axisX = miIndividual.axisX
-        axisY = miIndividual.axisY   
-        div = document.getElementById("frame-" + axisY + "-" + axisX)
-        // document.body.appendChild(modalContentEl);
-        if (matrix[axisX][axisY] == 1) {
-            miIndividual.live = false
-        }
-
-        if (miIndividual.live){
-            individualView = createCustomElement(
-                "p",
-                {
-                  style: "background-color:#"+miIndividual.color,
-                  class: "frame-content circle",
-                },
-                ["😀"]
-              )
-        }
-        else{
-            individualView = createCustomElement(
-                "p",
-                {
-                  style: "background-color:#"+miIndividual.color,
-                  class: "frame-content circle",
-                },
-                ["☠️"]
-              )
+        if (miIndividual.live) {
+            axisX = miIndividual.axisX
+            axisY = miIndividual.axisY
+            div = document.getElementById("frame-" + axisY + "-" + axisX)
+            let childs = div.childNodes
+            if (childs.length > 0) {
+                div.removeChild(childs[0])
             }
-        div.appendChild(individualView);
-        finalX = axisX
-        finalY = axisY
-        generateStatistics(miIndividual)
+            miIndividual.nextStep()
+            axisX = miIndividual.axisX
+            axisY = miIndividual.axisY   
+            // document.body.appendChild(modalContentEl);
+            if (matrix[axisX][axisY] == 1) {
+                miIndividual.live = false
+            }
+            if (validatePosition(axisX, axisY)) {
+                alert("El individuo " + miIndividual.id + " ha salido del tablero")
+                miIndividual.live = false
+                miIndividual.previousStep()
+                axisX = miIndividual.axisX
+                axisY = miIndividual.axisY
+            }
+            div = document.getElementById("frame-" + axisY + "-" + axisX)
+            if (miIndividual.live){
+                individualView = createCustomElement(
+                    "p",
+                    {
+                    style: "background-color:#"+miIndividual.color,
+                    class: "frame-content circle",
+                    },
+                    ["😀"]
+                )
+            }
+            else{
+                individualView = createCustomElement(
+                    "p",
+                    {
+                    style: "background-color:#"+miIndividual.color,
+                    class: "frame-content circle",
+                    },
+                    ["☠️"]
+                )
+                }
+            div.appendChild(individualView);
+            finalX = axisX
+            finalY = axisY
+            generateStatistics(miIndividual)
+        }
     }
     div = document.getElementById("frame-" + finalY + "-" + finalX)
     let childs = div.childNodes
@@ -296,6 +303,16 @@ function printIndividuals() {
         div.removeChild(childs[0])
     }
 
+}
+
+function validatePosition(axisX, axisY){
+    if (axisX < 0 || axisX >= matrix.length){
+        return true
+    }
+    if (axisY < 0 || axisY >= matrix[0].length){
+        return true
+    }
+    return false
 }
 
 function generateStatistics(miIndividual){

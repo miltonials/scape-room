@@ -47,13 +47,31 @@ function initialPopulation() {
         // generar un color random usando hexadecimal
         let randomColor = Math.floor(Math.random()*16777215).toString(16);
         let adn = document.getElementById("adn").value.toUpperCase()
-        let person = new Individual("individual-" + amount, adn, randomColor);        
-        population.push(person);
-        amount--;
+        if (1 <= adn.length ){
+            let person = new Individual("individual-" + amount, adn, randomColor);        
+            population.push(person);
+            amount--;
+        }
+        else{
+            let adn = generateADN()
+            let person = new Individual("individual-" + amount, adn, randomColor);
+            population.push(person);
+            amount--;
+        }
     }
 
     console.log(population);
     bestIndividuals();
+}
+
+function generateDNA(){
+    let movi = ['W','A','S','D']
+    let adn = ""
+    for (let i = 0; i < dimensions; i++) {
+        let random = Math.floor(Math.random() * movi.length);
+        adn += movi[random]
+    }
+    return adn
 }
 
 

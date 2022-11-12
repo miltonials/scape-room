@@ -57,7 +57,7 @@ function initialPopulation() {
             amount--;
         }
         else{
-            let adn = generateADN()
+            let adn = generateDNA()
             let person = new Individual("individual-" + amount, adn, randomColor);
             population.push(person);
             amount--;
@@ -71,7 +71,7 @@ function initialPopulation() {
 function generateDNA(){
     let movi = ['W','A','S','D']
     let adn = ""
-    for (let i = 0; i < dimensions; i++) {
+    for (let i = 0; i < dimensions * dimensions; i++) {
         let random = Math.floor(Math.random() * movi.length);
         adn += movi[random]
     }
@@ -244,9 +244,11 @@ function crossingComplex(dna1, dna2){
 
 async function run(){
     if(inRun) {
+        document.getElementById("btn-run").innerHTML = "Run"
         inRun = false
     }
     else {
+        document.getElementById("btn-run").innerHTML = "Pause"
         inRun = true
         console.log("run")
         if (population.length == 0){
@@ -262,7 +264,7 @@ async function run(){
             return
         }
         while (inRun){
-            await sleep(500)
+            await sleep(100)
             if (liveIndividuals()) {
                 printIndividuals()
             }
@@ -270,12 +272,28 @@ async function run(){
                 generation++
                 updateGeneration()
                 let theElite = bestIndividuals()
+                clean()
                 generatePopulation(theElite)
                 // AQUÍ ES CUANDO SE DEBE CREAR LA NUEVA POBLACIÓN
                 // SE REALIZA EL CRUCE DE LOS INDIVIDUOS
             }
         }
     }
+}
+
+function clean() {
+    let div
+    population.forEach(individual => {
+        div = document.getElementById(individual.id)
+        div.remove()
+
+        div = document.getElementById("frame-" + individual.axisY + "-" + individual.axisX)
+        //eliminar hijos del div
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+    });
+    sleep(1000)
 }
 
 function liveIndividuals(){

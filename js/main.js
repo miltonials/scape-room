@@ -17,13 +17,7 @@ function bestIndividuals(){
 
     let selectionPercentage =  document.getElementById("selection").value;
     let populationAmount = population.length / 100;
-    let totalAmount = populationAmount *selectionPercentage;
-    
-    
-    for (i in population) {
-        miIndividual = population[i]
-        miIndividual.calculateFitness(dimensions)
-    }
+    let totalAmount =Math.ceil(populationAmount *selectionPercentage);
     
     population.sort(function (a, b) {
         if (a.fitness < b.fitness) {
@@ -296,18 +290,19 @@ function printIndividuals() {
                 div.removeChild(childs[0])
             }
             miIndividual.nextStep()
+            miIndividual.calculateFitness(dimensions)
             axisX = miIndividual.axisX
             axisY = miIndividual.axisY   
             // document.body.appendChild(modalContentEl);
-            if (matrix[axisX][axisY] == 1) {
-                miIndividual.live = false
-            }
             if (validatePosition(axisX, axisY)) {
                 alert("El individuo " + miIndividual.id + " ha salido del tablero")
                 miIndividual.live = false
                 miIndividual.previousStep()
                 axisX = miIndividual.axisX
                 axisY = miIndividual.axisY
+            }
+            if (matrix[axisY][axisX] == 1) {
+                miIndividual.live = false
             }
             div = document.getElementById("frame-" + axisY + "-" + axisX)
             if (miIndividual.live){

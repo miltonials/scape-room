@@ -63,7 +63,7 @@ class Individual{
      * @param {int} dimentions | dimentions of the matrix
      */
     calculateFitness(dimentions){
-        this.nextStep()//in case of not being called it before
+        //this.nextStep()//in case of not being called it before
         let w = 0
         let distance = this.distancia
         let steps = this.calculateClosing(dimentions)

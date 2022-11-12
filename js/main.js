@@ -3,7 +3,7 @@ let dimensions = 0;
 let obstacles = 0;
 let population = [];
 let generation = 0;
-
+let inRun = false
 
 
 /** 
@@ -18,7 +18,11 @@ function bestIndividuals(){
     let selectionPercentage =  document.getElementById("selection").value;
     let populationAmount = population.length / 100;
     let totalAmount =Math.ceil(populationAmount *selectionPercentage);
-    
+
+    if (totalAmount <= 1) {
+        totalAmount = 2
+    }
+
     population.sort(function (a, b) {
         if (a.fitness < b.fitness) {
           return 1;
@@ -221,22 +225,38 @@ function crossingComplex(dna1, dna2){
 
 
 async function run(){
-    console.log("run")
-    if (population.length == 0){
-        alert("No hay población")
-        return
-    } 
-    if (matrix.length == 0){
-        alert("No hay matriz")
-        return
+    if(inRun) {
+        inRun = false
     }
-    if (validateADN()){
-        alert("El ADN unicamente debe permitir W,A,S,D")
-        return
-    }
-    while (liveIndividuals()){
-        await sleep(500)
-        printIndividuals()
+    else {
+        inRun = true
+        console.log("run")
+        if (population.length == 0){
+            alert("No hay población")
+            return
+        } 
+        if (matrix.length == 0){
+            alert("No hay matriz")
+            return
+        }
+        if (validateADN()){
+            alert("El ADN unicamente debe permitir W,A,S,D")
+            return
+        }
+        while (inRun){
+            await sleep(500)
+            if (liveIndividuals()) {
+                printIndividuals()
+            }
+            else {
+                generation++
+                updateGeneration()
+                let theElite = bestIndividuals()
+                generatePopulation(theElite)
+                // AQUÍ ES CUANDO SE DEBE CREAR LA NUEVA POBLACIÓN
+                // SE REALIZA EL CRUCE DE LOS INDIVIDUOS
+            }
+        }
     }
 }
 
@@ -248,13 +268,34 @@ function liveIndividuals(){
             break
         }
     }
-    if (!live){
-        generation++
-        updateGeneration()
-        // AQUÍ ES CUANDO SE DEBE CREAR LA NUEVA POBLACIÓN
-        // SE REALIZA EL CRUCE DE LOS INDIVIDUOS
-    }
     return live
+}
+
+function generatePopulation(theElite) {
+    let childXgeneration = document.getElementById("childrenXgeneraion").value
+    let newPopulation = population.length + parseInt(childXgeneration)
+    let adn1 = ""
+    let adn2 = ""
+    population = []
+    let randIndividual = 0
+
+
+    for (let i = 0; i < newPopulation; i++) {
+        randIndividual =  Math.floor(Math.random() * theElite.length)
+        dna1 = theElite[randIndividual].ADN
+
+        randIndividual =  Math.floor(Math.random() * theElite.length)
+        dna2 = theElite[randIndividual].ADN
+        // if (adn1 === adn2) {
+        //     i--
+        // }
+        // else {
+            let randomColor = Math.floor(Math.random()*16777215).toString(16)
+            population.push(new Individual(i, crossingComplex(dna1, dna2), randomColor))
+        // }
+    }
+    console.log("nueva poblacion", population)
+    return
 }
 
 function updateGeneration(){
@@ -295,7 +336,7 @@ function printIndividuals() {
             axisY = miIndividual.axisY   
             // document.body.appendChild(modalContentEl);
             if (validatePosition(axisX, axisY)) {
-                alert("El individuo " + miIndividual.id + " ha salido del tablero")
+                // alert("El individuo " + miIndividual.id + " ha salido del tablero")
                 miIndividual.live = false
                 miIndividual.previousStep()
                 axisX = miIndividual.axisX

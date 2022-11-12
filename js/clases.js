@@ -71,8 +71,8 @@ class Individual{
         w = distance*steps
 
         //setting fitness
-        this.fitnes
-        s = w/100
+        
+        this.fitness = w/100
     }
 
     /**

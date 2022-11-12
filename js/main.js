@@ -4,6 +4,44 @@ let obstacles = 0;
 let population = [];
 let generation = 0;
 
+
+
+/** 
+ * Function that returns the best individual acccording to the selection percentaje selected by the user
+ * @returns {Array} with individuals
+ */
+
+function bestIndividuals(){
+
+    let bestGens = [];
+
+    let selectionPercentage =  document.getElementById("selection").value;
+    let populationAmount = population.length / 100;
+    let totalAmount = populationAmount *selectionPercentage;
+    
+    
+    for (i in population) {
+        miIndividual = population[i]
+        miIndividual.calculateFitness(dimensions)
+    }
+    
+    population.sort(function (a, b) {
+        if (a.fitness < b.fitness) {
+          return 1;
+        }
+        if (a.fitness > b.fitness) {
+          return -1;
+        }
+          return 0;
+      });
+
+    bestGens = population.slice( 0, totalAmount);
+
+    
+
+    return bestGens 
+}
+
 function initialPopulation() {
 
     let amount = document.getElementById("iPopulation").value;
@@ -21,6 +59,7 @@ function initialPopulation() {
     }
 
     console.log(population);
+    bestIndividuals();
 }
 
 

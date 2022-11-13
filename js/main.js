@@ -6,7 +6,7 @@ let generation = 0;
 let inRun = false
 
 
-/** 
+/**
  * Function that returns the best individual acccording to the selection percentaje selected by the user
  * @returns {Array} with individuals
  */
@@ -35,9 +35,9 @@ function bestIndividuals(){
 
     bestGens = population.slice( 0, totalAmount);
 
-    
 
-    return bestGens 
+
+    return bestGens
 }
 
 function initialPopulation() {
@@ -52,7 +52,7 @@ function initialPopulation() {
         let randomColor = Math.floor(Math.random()*16777215).toString(16);
         let adn = document.getElementById("adn").value.toUpperCase()
         if (1 <= adn.length ){
-            let person = new Individual("individual-" + amount, adn, randomColor);        
+            let person = new Individual("individual-" + amount, adn, randomColor);
             population.push(person);
             amount--;
         }
@@ -71,7 +71,7 @@ function initialPopulation() {
 function generateDNA(){
     let movi = ['W','A','S','D']
     let adn = ""
-    for (let i = 0; i < dimensions * dimensions; i++) {
+    for (let i = 0; i < dimensions; i++) {
         let random = Math.floor(Math.random() * movi.length);
         adn += movi[random]
     }
@@ -114,9 +114,9 @@ function creationMatrix() {
 }
 
 
-/** 
- * Función que permite crear el tablero mxm. Donde m = dimensiones 
- * @param {int} dimensiones 
+/**
+ * Función que permite crear el tablero mxm. Donde m = dimensiones
+ * @param {int} dimensiones
  */
  function creationMap() {
     generation = 1
@@ -127,7 +127,7 @@ function creationMatrix() {
     let tablero_container = document.getElementById("room-container");
     let tableroHTML = "";
     let numeros = [];
-  
+
     if (document.getElementById("room") != null) {
       document.getElementById("room").remove()
     }
@@ -145,7 +145,7 @@ function creationMatrix() {
             let miIndividual
             for (k in population) {
                 miIndividual = population[k]
-                letra +=  `<p class="frame-content circle" style="background-color:#`+miIndividual.color+`">😀</p>`
+                letra +=  `<p id="` + miIndividual.id + `" class="frame-content circle" style="background-color:#`+miIndividual.color+`">😀</p>`
                 generateStatistics(miIndividual)
             }
             tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
@@ -160,7 +160,7 @@ function creationMatrix() {
             let letra =  `<p class="frame-content"></p>`
             tableroHTML +=  `<div id="frame-`+i+`-`+j+`" class="roomElement">` + letra + `</div>`;
         }
-            
+
       }
       tableroHTML += "</div>";
     }
@@ -172,24 +172,24 @@ function creationMatrix() {
         },
         [tableroHTML]
       )
-    
+
     document.body.appendChild(modalContentEl);
     tablero_container.appendChild(modalContentEl);
-    
+
  }
 
 /**
  * receives 2 chromosomes and returns a new chromosome
- * @param {string} dna1 
- * @param {string} dna2 
+ * @param {string} dna1
+ * @param {string} dna2
  * @returns {string} new chromosome
  */
 function crossing(dna1, dna2){
     let childDNA = "";
-    
+
     let half = parseInt(dna1.length/2); //get first half of the dna
     let half2 = parseInt(dna2.length/2); //get second half of the dna
-    
+
     childDNA = dna1.substring(0, half) + dna2.substring(half2, dna2.length);
     return childDNA;
 }
@@ -202,7 +202,7 @@ function crossingComplex(dna1, dna2){
     let chromosome = "";
 
     //get 3 chromosomes from father
-    for(let i = 0; i<3; i++){
+    for(let i = 0; i<dna1.length / 2; i++){
         //random between 0 and dna1.length-1
         random = Math.floor(Math.random() * dna1.length);
         childDNA += dna1[random];
@@ -227,7 +227,7 @@ function crossingComplex(dna1, dna2){
         }
     }
     return childDNA;
-    
+
 }
 
 //Funcion sleep tomada de https://www.delftstack.com/howto/javascript/javascript-wait-for-x-seconds/
@@ -235,7 +235,7 @@ function crossingComplex(dna1, dna2){
  * Función que permite pausar la ejecución del programa por un tiempo determinado
  *
  * @param {int} ms | tiempo en milisegundos que se espera
- * @return {object} 
+ * @return {object}
  */
  function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -254,7 +254,7 @@ async function run(){
         if (population.length == 0){
             alert("No hay población")
             return
-        } 
+        }
         if (matrix.length == 0){
             alert("No hay matriz")
             return
@@ -283,16 +283,20 @@ async function run(){
 
 function clean() {
     let div
+    // STATS REMOVE⬇️
     population.forEach(individual => {
-        div = document.getElementById(individual.id)
+        div = document.getElementById(individual.id + "-stats")
         div.remove()
-
-        div = document.getElementById("frame-" + individual.axisY + "-" + individual.axisX)
-        //eliminar hijos del div
-        while (div.firstChild) {
-            div.removeChild(div.firstChild);
-        }
     });
+    // GRID REMOVE⬇️
+    for (let x = 0; x < matrix.length; x++) {
+        for (let y = 0; y < matrix.length; y++) {
+            div = document.getElementById("frame-" + y + "-" + x)
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+            }
+        }
+    }
     sleep(1000)
 }
 
@@ -327,9 +331,11 @@ function generatePopulation(theElite) {
         // }
         // else {
             let randomColor = Math.floor(Math.random()*16777215).toString(16)
-            population.push(new Individual(i, crossingComplex(dna1, dna2), randomColor))
+            population.push(new Individual( "individual-" + (i + 1), crossingComplex(dna1, dna2), randomColor))
         // }
     }
+
+    // creationMap()
     console.log("nueva poblacion", population)
     return
 }
@@ -353,26 +359,21 @@ function printIndividuals() {
     let axisX
     let axisY
     let div
-    let finalX = 0
-    let finalY = 0
     let individualView
     for (i in population) {
         miIndividual = population[i]
         if (miIndividual.live) {
-            axisX = miIndividual.axisX
-            axisY = miIndividual.axisY
-            div = document.getElementById("frame-" + axisY + "-" + axisX)
-            let childs = div.childNodes
-            if (childs.length > 0) {
-                div.removeChild(childs[0])
+            div = document.getElementById(miIndividual.id)
+            if (div != null) {
+                div.remove()
             }
+
             miIndividual.nextStep()
             miIndividual.calculateFitness(dimensions)
+
             axisX = miIndividual.axisX
-            axisY = miIndividual.axisY   
-            // document.body.appendChild(modalContentEl);
+            axisY = miIndividual.axisY
             if (validatePosition(axisX, axisY)) {
-                // alert("El individuo " + miIndividual.id + " ha salido del tablero")
                 miIndividual.live = false
                 miIndividual.previousStep()
                 axisX = miIndividual.axisX
@@ -381,39 +382,42 @@ function printIndividuals() {
             if (matrix[axisY][axisX] == 1) {
                 miIndividual.live = false
             }
+
             div = document.getElementById("frame-" + axisY + "-" + axisX)
-            if (miIndividual.live){
-                individualView = createCustomElement(
-                    "p",
-                    {
-                    style: "background-color:#"+miIndividual.color,
-                    class: "frame-content circle",
-                    },
-                    ["😀"]
-                )
-            }
-            else{
-                individualView = createCustomElement(
-                    "p",
-                    {
-                    style: "background-color:#"+miIndividual.color,
-                    class: "frame-content circle",
-                    },
-                    ["☠️"]
-                )
-                }
+
+            individualView = printIndividual_aux(miIndividual)
             div.appendChild(individualView);
-            finalX = axisX
-            finalY = axisY
             generateStatistics(miIndividual)
         }
     }
-    div = document.getElementById("frame-" + finalY + "-" + finalX)
-    let childs = div.childNodes
-    if (childs.length > 0) {
-        div.removeChild(childs[0])
+}
+
+function printIndividual_aux(miIndividual) {
+    let individualView
+    if (miIndividual.live){
+        individualView = createCustomElement(
+            "p",
+            {
+                id: miIndividual.id,
+                style: "background-color:#"+miIndividual.color,
+                class: "frame-content circle",
+            },
+            ["😀"]
+        )
+    }
+    else{
+        individualView = createCustomElement(
+            "p",
+            {
+                id: miIndividual.id,
+                style: "background-color:#"+miIndividual.color,
+                class: "frame-content circle",
+            },
+            ["☠️"]
+        )
     }
 
+    return individualView
 }
 
 function validatePosition(axisX, axisY){
@@ -427,30 +431,29 @@ function validatePosition(axisX, axisY){
 }
 
 function generateStatistics(miIndividual){
-    let div = document.getElementById(miIndividual.id)
+    let div = document.getElementById(miIndividual.id + "-stats")
     let table = document.getElementById("rows-container")
     let stats = ''
 
     if (div != null){
         div.remove()
     }
-
     stats = '<p class="table-element" style=background-color:#'+miIndividual.color+'>'
     if (miIndividual.live){
-        stats += '😀' + miIndividual.id 
+        stats += '😀' + miIndividual.id
     }
     else{
-        stats += '☠️' + miIndividual.id 
+        stats += '☠️' + miIndividual.id
     }
 
     stats += '<p class="table-element center dna">'+miIndividual.ADN+'</p>'
     stats += '<p class="table-element center">'+miIndividual.distancia+'</p>'
     stats += '<p class="table-element center">'+miIndividual.fitness+'</p>'
-
+    
     let individualView = createCustomElement(
         "p",
         {
-            id: miIndividual.id,
+            id: miIndividual.id + "-stats",
             class: "table-row center",
         },
         [stats]

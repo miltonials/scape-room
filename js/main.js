@@ -4,17 +4,30 @@ let obstacles = 0;
 let population = [];
 let generation = 0;
 let inRun = false
+let firstStrategy = true
 
+/**
+ * Function that change the type of strategy selected by the user
+ */
+function changeStrategy() {
+    if (firstStrategy) {
+        document.getElementById("btn-first-strategy").classList.remove("active");
+        document.getElementById("btn-second-strategy").classList.add("active");
+        firstStrategy = false
+    }
+    else {
+        document.getElementById("btn-first-strategy").classList.add("active");
+        document.getElementById("btn-second-strategy").classList.remove("active");
+        firstStrategy = true
+    }
+}
 
 /**
  * Function that returns the best individual acccording to the selection percentaje selected by the user
  * @returns {Array} with individuals
  */
-
 function bestIndividuals() {
-
     let bestGens = [];
-
     let selectionPercentage = document.getElementById("selection").value;
     let populationAmount = population.length / 100;
     let totalAmount = Math.ceil(populationAmount * selectionPercentage);
@@ -34,21 +47,13 @@ function bestIndividuals() {
     });
 
     bestGens = population.slice(0, totalAmount);
-
-
-
     return bestGens
 }
 
 function initialPopulation() {
-
     let amount = document.getElementById("iPopulation").value;
     population = [];
     while (amount != 0) {
-        // crear un random de 0 a 8
-        // let random = Math.floor(Math.random() * circles.length);
-        // let color = circles[random];
-        // generar un color random usando hexadecimal
         let randomColor = Math.floor(Math.random() * 16777215).toString(16);
         let adn = document.getElementById("adn").value.toUpperCase()
         if (1 <= adn.length) {
@@ -68,6 +73,10 @@ function initialPopulation() {
     bestIndividuals();
 }
 
+/**
+ * Functions that create randoms dna for the individuals.
+ * Each dna has a length of the matrix order.
+ */
 function generateDNA() {
     let movi = ['W', 'A', 'S', 'D']
     let adn = ""
@@ -277,7 +286,7 @@ function sleep(ms) {
 
 async function run() {
     if (inRun) {
-        document.getElementById("btn-run").innerHTML = "Run"
+        document.getElementById("btn-run").innerHTML = "Play"
         inRun = false
     }
     else {
@@ -297,7 +306,7 @@ async function run() {
             return
         }
         while (inRun) {
-            await sleep(1)
+            await sleep(0.001)
             if (liveIndividuals()) {
                 printIndividuals()
             }
@@ -492,18 +501,19 @@ function generateStatistics(miIndividual) {
     table.appendChild(individualView);
 }
 
+/**
+ * Function that validates the input of the user for the dna
+ */
 function validateADN() {
     let isValid = false
     let movi = ["W", "A", "S", "D"]
     for (Indi in population) {
         for (chromosome in population[Indi].ADN) {
-            // console.log(population[Indi].ADN[chromosome])
             let char = population[Indi].ADN[chromosome]
-            if (!movi.includes(char)) {//.toUpperCase()
+            if (!movi.includes(char)) {
                 isValid = true
             }
         }
     }
-    // console.log(isValid)
     return isValid
 }

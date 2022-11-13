@@ -6,11 +6,11 @@ class Individual{
         this.color = color
         this.fitness = 0
         this.distancia = 0
-        this.estado = true
         this.live = true
         this.ADN = ADN
         this.axisX = 0
         this.axisY = 0
+        this.keys = []
     }
 
     // funcion para obtenerADC
@@ -52,6 +52,42 @@ class Individual{
 
         return steps
     }
+    pickKeys(coordinate){
+        if (!(coordinate in this.keys)){
+             this.keys.push(coordinate)
+        }
+        else{
+            this.keys.pop(this.keys.indexOf(coordinate))
+        }
+    }
+    /**
+     * method that returns the distance formula 
+     * @param {int} coordinate coordinate awards
+     */
+     distanceFormula(coordinate){
+        let x = this.axisX
+        let y = this.axisY
+        let x2 = coordinate[0]
+        let y2 = coordinate[1]
+        let distance = Math.sqrt(Math.pow(x2-x, 2) + Math.pow(y2-y, 2))
+        return distance
+    }
+    /**
+     * method that returns existe awards
+     * @param {int} matrix matrix map
+     * @returns 
+     */
+    existeAwards(matrix){
+        let awards = []
+        for (let i = 0; i < matrix.length; i++){
+            for (let j = 0; j < matrix.length; j++){
+                if (matrix[i][j] == 2){
+                    awards.push([i, j])
+                }
+            }
+        }
+        return awards
+    }
 
     /**
      * method that calculates the fitness of an individual
@@ -60,20 +96,42 @@ class Individual{
      * survival = distance (how long it takes to reach the goal)
      * fecundity = steps (how much the indivual has walked)
      * set percentage of fitness to individual 
-     * @param {int} dimentions | dimentions of the matrix
+     * @param {int} matrix | dimentions of the matrix
      */
-    calculateFitness(dimentions){
+    calculateFitness(matrix, awards){
         //this.nextStep()//in case of not being called it before
         let w = 0
         let distance = this.distancia
-        let steps = this.calculateClosing(dimentions)
+        let steps = this.calculateClosing(matrix.length)
 
-        w = distance*steps
+        let coordinateAwards = this.existeAwards(matrix)
+        let distanceAwards = 0
+        for (let i = 0; i < coordinateAwards.length; i++){
+            if (this.keys.includes(coordinateAwards[i])){
+                distanceAwards += this.distanceFormula(coordinateAwards[i])
+            }
+        }
+        let awardsSteps = 0
+        for (let i = 0; i < awards.length; i++){
+            if (this.keys.includes(awards[i])){
+                awardsSteps += 1
+            }
+        }
+        w = (distance + distanceAwards) * (steps + awardsSteps)
+        this.fitness = w
+        // // let sum = 0 
+        // if (coordinateAwards.length > 0){
+        //     for (i in coordinateAwards){
+        //        distance += this.distanceFormula(coordinateAwards[i]) 
+        //     }
+        // }    
 
-        //setting fitness
+        // w = distance*steps
+        // //setting fitness
         
-        this.fitness = w/100
+        // this.fitness = w/100 + this.keys.length//-awards
     }
+        
 
     /**
      * method performing the following movement of the individual
@@ -94,9 +152,6 @@ class Individual{
                 this.live = false
             }   
         } 
-        else{
-            this.estado = false
-        }
     }
 
     /**

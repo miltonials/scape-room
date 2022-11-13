@@ -5,6 +5,7 @@ let population = [];
 let generation = 0;
 let inRun = false
 let firstStrategy = true
+let premios = 0;
 
 /**
  * Function that change the type of strategy selected by the user
@@ -121,17 +122,65 @@ function creationMatrix() {
     }
     initialPopulation()
 }
-
-
-/**
- * Función que permite crear el tablero mxm. Donde m = dimensiones
- * @param {int} dimensiones
- */
-function creationMap() {
-    generation = 1
-    dimensions = document.getElementById("dimensions").value;
-    obstacles = document.getElementById("obstacles").value;
-    creationMatrix()
+function creationMatrix2() {
+    premios = Math.ceil(obstacles*0.25)
+    let porcentaje = (obstacles / 100) * dimensions * dimensions
+    for (let i = 0; i < dimensions; i++) {
+        matrix[i] = [];
+        for (let j = 0; j < dimensions; j++) {
+            matrix[i][j] = 0;
+        }
+    }
+    let randomfila = 0;
+    let randomcolumna = 0;
+    if (obstacles > 0) {
+        if (obstacles > dimensions * dimensions) {
+            alert("No se pueden colocar tantos obstáculos")
+            return
+        }
+        // obstacles no debe ser mayor a 30%
+        if (obstacles > (dimensions * dimensions) * 0.30) {
+            alert("No se pueden colocar tantos obstáculos")
+            return
+        }
+        if (premios > 0){
+            let porcentaje2 = (premios / 100) * dimensions * dimensions
+            for (let i = 0; i < porcentaje2; i++) {
+                randomfila = Math.floor(Math.random() * dimensions);
+                randomcolumna = Math.floor(Math.random() * dimensions);
+                if (matrix[randomfila][randomcolumna] == 2) {
+                    i--;
+                }
+                else {
+                    matrix[randomfila][randomcolumna] = 2;
+                }
+            }
+        }
+        for (let i = 0; i < porcentaje; i++) {
+            randomfila = Math.floor(Math.random() * dimensions);
+            randomcolumna = Math.floor(Math.random() * dimensions);
+            if (randomfila == dimensions-1 && randomcolumna == dimensions-1) {
+                i--;
+                continue
+            }
+            if (randomfila == 0 && randomcolumna == 0) {
+                i--;
+                continue;
+            }
+            if (matrix[randomfila][randomcolumna] == 1) {
+                i--;
+            }
+            else {
+                if (!(matrix[randomfila][randomcolumna] == 2)) {
+                    matrix[randomfila][randomcolumna] = 1;
+                }
+            }
+        }
+        
+    }
+    initialPopulation()
+}
+function creationMapStrategy1(){
     updateGeneration()
     let tablero_container = document.getElementById("room-container");
     let tableroHTML = "";
@@ -186,6 +235,87 @@ function creationMap() {
     tablero_container.appendChild(modalContentEl);
 
 }
+
+function creationMapStrategy2(){
+    updateGeneration()
+    let tablero_container = document.getElementById("room-container");
+    let tableroHTML = "";
+    let numeros = [];
+
+    if (document.getElementById("room") != null) {
+        document.getElementById("room").remove()
+    }
+    for (let i = 0; i < dimensions; i++) {
+        vector = []
+        tableroHTML += `<div class="row">`;
+        for (let j = 0; j < dimensions; j++) {
+            if (i == dimensions - 1 && j == dimensions - 1) {
+                let letra = `<p class="frame-content"></p>`
+                tableroHTML += `<div id="frame-` + i + `-` + j + `" class="roomElement goal">` + letra + `</div>`;
+                break
+            }
+            if (i == 0 && j == 0) {
+                let letra = ``
+                let miIndividual
+                for (k in population) {
+                    miIndividual = population[k]
+                    letra += `<p id="` + miIndividual.id + `" class="frame-content circle" style="background-color:#` + miIndividual.color + `">😀</p>`
+                    generateStatistics(miIndividual)
+                }
+                tableroHTML += `<div id="frame-` + i + `-` + j + `" class="roomElement">` + letra + `</div>`;
+                continue
+            }
+            if (matrix[i][j] == 1) {
+                let letra = `<p class="frame-content"></p>`
+                tableroHTML += `<div id="frame-` + i + `-` + j + `" class="roomElement obstacle">` + letra + `</div>`;
+                continue
+            }
+            if (matrix[i][j] == 2) {
+                let letra = `<p class="frame-content">🗝️</p>`
+                tableroHTML += `<div id="frame-` + i + `-` + j + `" class="roomElement">` + letra + `</div>`;
+                continue
+            }
+            else {
+                let letra = `<p class="frame-content"></p>`
+                tableroHTML += `<div id="frame-` + i + `-` + j + `" class="roomElement">` + letra + `</div>`;
+            }
+
+        }
+        tableroHTML += "</div>";
+    }
+    const modalContentEl = createCustomElement(
+        "div",
+        {
+            id: "room",
+            class: "room",
+        },
+        [tableroHTML]
+    )
+
+    document.body.appendChild(modalContentEl);
+    tablero_container.appendChild(modalContentEl);
+
+}
+
+
+/**
+ * Función que permite crear el tablero mxm. Donde m = dimensiones
+ * @param {int} dimensiones
+ */
+ function creationMap() {
+    generation = 1
+    dimensions = document.getElementById("dimensions").value;
+    obstacles = document.getElementById("obstacles").value;
+    if (firstStrategy ){
+        creationMatrix()
+        creationMapStrategy1()
+    }
+    else{
+        creationMatrix2()
+        creationMapStrategy2()
+    }
+}
+
 
 /**
  * receives 2 chromosomes and returns a new chromosome
@@ -317,6 +447,12 @@ async function run() {
                 let theElite = bestIndividuals()
                 clean()
                 generatePopulation(theElite)
+                if (firstStrategy){
+                    creationMapStrategy1()
+                }
+                else{
+                    creationMapStrategy2()
+                }
             }
         }
     }
@@ -419,13 +555,20 @@ function printIndividuals() {
             if (matrix[axisY][axisX] == 1) {
                 miIndividual.live = false
             }
-
+            if (matrix[axisY][axisX] == 2) {
+                miIndividual.pickKeys([[axisY],[axisX]], premios)
+            }
             div = document.getElementById("frame-" + axisY + "-" + axisX)
 
             individualView = printIndividual_aux(miIndividual)
             div.appendChild(individualView);
 
-            miIndividual.calculateFitness(dimensions)
+            // if (firstStrategy){
+                miIndividual.calculateFitness(matrix, premios)
+            // }
+            // else{
+                // miIndividual.calculateFitness2(matrix)
+            // }
             generateStatistics(miIndividual)
         }
     }

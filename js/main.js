@@ -441,7 +441,7 @@ function crossingComplex(dna1, dna2) {
  * @param {int} ms | tiempo en milisegundos que se espera
  * @return {object}
  */
- unction sleep(ms) {
+ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 

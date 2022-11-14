@@ -11,6 +11,7 @@ class Individual{
         this.axisX = 0
         this.axisY = 0
         this.keys = []
+        this.win = false
     }
 
     // funcion para obtenerADC
@@ -53,12 +54,12 @@ class Individual{
         return steps
     }
     pickKeys(coordinate){
-        if (!(coordinate in this.keys)){
-             this.keys.push(coordinate)
+        for (let i = 0; i < this.keys.length; i++) {
+            if(JSON.stringify(coordinate) === JSON.stringify(this.keys[i])){
+                return
+            }
         }
-        else{
-            this.keys.pop(this.keys.indexOf(coordinate))
-        }
+        this.keys.push(coordinate)
     }
     /**
      * method that returns the distance formula 
@@ -98,7 +99,7 @@ class Individual{
      * set percentage of fitness to individual 
      * @param {int} matrix | dimentions of the matrix
      */
-    calculateFitness(matrix, awards){
+    calculateFitness(matrix,firstStrategy){
         //this.nextStep()//in case of not being called it before
         let w = 0
         let distance = this.distancia
@@ -106,26 +107,24 @@ class Individual{
 
         let coordinateAwards = this.existeAwards(matrix)
         let distanceAwards = 0
-        for (let i = 0; i < coordinateAwards.length; i++){
-            if (this.keys.includes(coordinateAwards[i])){
+        if (firstStrategy == false){
+            for (let i = 0; i < coordinateAwards.length; i++){
                 distanceAwards += this.distanceFormula(coordinateAwards[i])
             }
         }
         let awardsSteps = 0
-        for (let i = 0; i < awards.length; i++){
-            if (this.keys.includes(awards[i])){
-                awardsSteps += 1
+        for (let i = 0; i < coordinateAwards.length; i++){
+            for (let j = 0; j < this.keys.length; j++){
+                if (coordinateAwards[i][0] == this.keys[j][0] && coordinateAwards[i][1] == this.keys[j][1]){
+                    awardsSteps += 1
+                }
             }
         }
         w = (distance + distanceAwards) * (steps + awardsSteps)
         this.fitness = w
-        // // let sum = 0 
-        // if (coordinateAwards.length > 0){
-        //     for (i in coordinateAwards){
-        //        distance += this.distanceFormula(coordinateAwards[i]) 
-        //     }
-        // }    
-
+        if (this.win){
+            this.fitness ++
+        }
         // w = distance*steps
         // //setting fitness
         
@@ -140,6 +139,9 @@ class Individual{
         let movi = ["W" ,"A","S","D"]
         let moviX = [0, -1, 0, 1]
         let moviY = [-1, 0, 1, 0]
+        if (this.win){
+            return
+        }
         if (this.live){
             if (this.distancia < this.ADN.length){
                 let mov = this.ADN[this.distancia]

@@ -1,3 +1,4 @@
+// let matrix = [[0, 0, 0, 0, 0, 1, 0, 1, 0, 0],[0, 0, 0, 0, 0, 0, 1, 1, 0, 0],[0, 0, 0, 0, 0, 0, 1, 1, 0, 0],[0, 0, 1, 0, 0, 0, 0, 0, 0, 1],[0, 0, 0, 0, 0, 1, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 1, 0, 1, 1],[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 1, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],[0, 1, 0, 0, 1, 0, 0, 0, 0, 0]];
 let matrix = [];
 let dimensions = 0;
 let obstacles = 0;
@@ -81,7 +82,7 @@ function initialPopulation() {
 function generateDNA() {
     let movi = ['W', 'A', 'S', 'D']
     let adn = ""
-    for (let i = 0; i < dimensions; i++) {
+    for (let i = 0; i < 5; i++) {
         let random = Math.floor(Math.random() * movi.length);
         adn += movi[random]
     }
@@ -308,6 +309,7 @@ function creationMapStrategy2(){
     obstacles = document.getElementById("obstacles").value;
     if (firstStrategy ){
         creationMatrix()
+        // initialPopulation()
         creationMapStrategy1()
     }
     else{
@@ -334,7 +336,8 @@ function crossing(dna1, dna2, mutation) {
             childDNA += dna2[i]
         }
     }
-    if (mutation > 50) {
+    // childDNA = dna1.slice(0, Math.round(dna1.length / 2)) + dna2.slice(Math.round(dna2.length / 2), dna2.length)
+    if (mutation) {
         childDNA = mutate(childDNA)
     }
     let movi = ['W', 'A', 'S', 'D']
@@ -436,7 +439,8 @@ async function run() {
             return
         }
         while (inRun) {
-            await sleep(0.001)
+            //speed
+            await sleep(document.getElementById("speed").value)
             if (liveIndividuals()) {
                 printIndividuals()
             }
@@ -498,17 +502,21 @@ function generatePopulation(theElite) {
     let randomColor = ""
     let randomMutation = 0
 
-
     for (let i = 0; i < newPopulation; i++) {
         randIndividual = Math.floor(Math.random() * theElite.length)
-        dna1 = theElite[randIndividual].ADN
+        dna1 = theElite[randIndividual]
 
         randIndividual = Math.floor(Math.random() * theElite.length)
-        dna2 = theElite[randIndividual].ADN
+        dna2 = theElite[randIndividual]
 
         randomColor = Math.floor(Math.random() * 16777215).toString(16)
         randomMutation = Math.floor(Math.random() * 100)
-        population.push(new Individual("individual-" + (i + 1), crossing(dna1, dna2, randomMutation), randomColor))
+        if (dna1.win || dna2.win ){
+            population.push(new Individual("individual-" + (i + 1), crossing(dna1.ADN, dna2.ADN,false), randomColor))
+        }
+        else{
+            population.push(new Individual("individual-" + (i + 1), crossing(dna1.ADN, dna2.ADN,true), randomColor))
+        }
     }
     console.log("nueva poblacion", population)
     return
@@ -541,11 +549,14 @@ function printIndividuals() {
             if (div != null) {
                 div.remove()
             }
-
             miIndividual.nextStep()
-
             axisX = miIndividual.axisX
             axisY = miIndividual.axisY
+            if (axisX == dimensions-1 && axisY == dimensions-1) {
+                miIndividual.win = true
+                miIndividual.live = false
+                // miIndividual.ADN =  miIndividual.ADN.slice(0, miIndividual.distancia)
+            }
             if (validatePosition(axisX, axisY)) {
                 miIndividual.live = false
                 miIndividual.previousStep()
@@ -555,27 +566,35 @@ function printIndividuals() {
             if (matrix[axisY][axisX] == 1) {
                 miIndividual.live = false
             }
-            if (matrix[axisY][axisX] == 2) {
-                miIndividual.pickKeys([[axisY],[axisX]], premios)
+            if (matrix[axisY][axisX] == 2 && firstStrategy == false) {
+                miIndividual.pickKeys([[axisY],[axisX]])
             }
             div = document.getElementById("frame-" + axisY + "-" + axisX)
 
             individualView = printIndividual_aux(miIndividual)
             div.appendChild(individualView);
 
-            // if (firstStrategy){
-                miIndividual.calculateFitness(matrix, premios)
-            // }
-            // else{
-                // miIndividual.calculateFitness2(matrix)
-            // }
+            miIndividual.calculateFitness(matrix, firstStrategy)
             generateStatistics(miIndividual)
+
         }
     }
 }
 
 function printIndividual_aux(miIndividual) {
     let individualView
+    if (miIndividual.win) {
+        individualView = createCustomElement(
+            "div",
+            {
+                id: miIndividual.id,
+                style: "background-color:#" + miIndividual.color,
+                class: "frame-content circle",
+            },
+            ["🏆"]
+        )
+        return individualView
+    }
     if (miIndividual.live) {
         individualView = createCustomElement(
             "p",
@@ -625,11 +644,17 @@ function generateStatistics(miIndividual) {
         stats += '😀' + miIndividual.id
     }
     else {
-        stats += '☠️' + miIndividual.id
+        if (miIndividual.win) {
+            stats += '🏆' + miIndividual.id
+        }
+        else {  
+            stats += '☠️' + miIndividual.id
+        }
     }
 
     stats += '<p class="table-element center dna">' + miIndividual.ADN + '</p>'
     stats += '<p class="table-element center">' + miIndividual.distancia + '</p>'
+    stats += '<p class="table-element center">' + miIndividual.keys.length + '</p>'
     stats += '<p class="table-element center">' + miIndividual.fitness + '</p>'
 
     let individualView = createCustomElement(

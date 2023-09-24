@@ -18,29 +18,15 @@
   <main class="game-container">
     <section class="play">
       <section class="btns-container">
-        <button name="btn-firs-strategy" class="btn active" id="btn-backtracking">First strategy</button>
-        <button name="btn-second-strategy" class="btn" id="btn-estrella">Second strategy</button>
-        <button name="btn-run" class="btn" id="btn-run">Run</button>
-      </section>
-      <section class="room-container center">
-        <section class="room" id="room">
-          <div class="row">
-            <div id="frame-0-0" class="roomElement">
-              <p class="frame-content">🚧</p>
-            </div>
-            <div id="frame-0-1" class="roomElement">
-              <p class="frame-content">🚪</p>
-            </div>
-          </div>
-          <div class="row">
-            <div id="frame-1-0" class="roomElement">
-              <p class="frame-content">😀</p>
-            </div>
-            <div id="frame-1-1" class="roomElement">
-              <p class="frame-content">🚧</p>
-            </div>
-          </div>
+        <button name="btn-firs-strategy" class="btn active" id="btn-first-strategy" onclick="changeStrategy()">First strategy</button>
+        <button name="btn-second-strategy" class="btn" id="btn-second-strategy" onclick="changeStrategy()">Second strategy</button>
+        <button name="btn-run" class="btn" id="btn-run" onclick="run()">Play</button>
+        <input class="spinner" type="number" id="speed" name="speed" min="0" value="100" step="100">
         </section>
+      <section class="room-container" id="room-container">
+        <div class="room" id="room">
+          <!-- insert here the game grid -->
+        </div>
       </section>
     </section>
     <aside>
@@ -50,246 +36,59 @@
           <div class="center">
             <h3 class="room-dimensions">Room dimensions</h3>
             <div class="spinner-container">
-              <input class="spinner" type="number" id="dimensions" name="dimensions" min="10" max="30">
+              <input class="spinner" type="number" id="dimensions" name="dimensions" min="10" max="30" value="10">
             </div>
           </div>
           <div class="center">
-            <h3>Number of obstacles</h3>
+            <h3>Porcentaje of obstacles</h3>
             <div class="spinner-container">
-              <input class="spinner" type="number" id="obstacles" name="obstacles" min="10" max="30">
+              <input class="spinner" type="number" id="obstacles" name="obstacles" value="1" min="1" max="15">%
             </div>
           </div>
           <div class="center">
             <h3>Number of children per generation</h3>
             <div class="spinner-container">
-              <input class="spinner" type="number" id="childrenXgeneraion" name="childrenXgeneraion" min="0" max="30">
+              <input class="spinner" type="number" id="childrenXgeneraion" name="childrenXgeneraion" min="0" max="30" value="0">
             </div>
           </div>
           <div class="center">
             <h3>Selection percentage</h3>
             <div class="spinner-container">
-              <input class="spinner" type="number" id="selection" name="selection" min="5" max="75">
+              <input class="spinner" type="number" id="selection" name="selection" min="5" max="75" value="5">%
             </div>
           </div>
           <div class="center">
             <h3>Initial population size</h3>
             <div class="spinner-container">
-              <input class="spinner" type="number" id="iPopulation" name="iPopulation" min="10">
+              <input class="spinner" type="number" id="iPopulation" name="iPopulation" min="10" value="50">
             </div>
           </div>
           <div class="center">
             <h3>ADN</h3>
             <div class="spinner-container">
-              <input class="text" type="text" id="adn" name="adn">
+              <input class="text" type="text" id="adn" name="adn" placeholder="WASD">
             </div>
           </div>
           <div class="btns-container">
-            <p class="btn save center">Save settings</p>
+            <p class="btn save center" onclick="creationMap()">Save settings</p>
           </div>
         </form>
       </section>
-      <section>
+      <section class="execution-data-container">
         <br />
-        <h1>
-          Execution data
+        <h1 id="generation-counter">
+            Execution data (1° generation)
         </h1>
         <section id="logs-history" class="table">
           <div class="table-row center table-titles">
             <p class="center">Competitor</p>
-            <p class="center">Time</p>
+            <p class="center">DNA</p>
             <p class="center">Steps</p>
+            <p class="center">Keys</p>
             <p class="center">Fitness</p>
           </div>
-          <section class="rows-container">
-
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-  
-  
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-            <div class="table-row center">
-              <p class="table-element center">😀</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-              <p class="table-element center">0</p>
-            </div>
-  
-  
-  
-  
-  
-
+          <section class="rows-container" id="rows-container">
+            <!-- Insert stats here -->
           </section>  
 
         </section>
@@ -307,6 +106,7 @@
   </main>
   <script src="./js/modals/controller.js"></script>
   <script src="./js/modals/customModals.js"></script>
+  <script src="./js/clases.js"></script>
   <script src="./js/main.js"></script>
 </body>
 

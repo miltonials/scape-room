@@ -33,6 +33,18 @@ const createCustomElement = (element, attributes, children) => {
   return customElement;
 };
 
+function removeModal() {
+  let modal = document.querySelector(".modal--container");
+  if (modal) {
+    document.body.removeChild(modal);
+  }
+  let modalContent = document.querySelector("#content--modal");
+  if (modalContent) {
+    document.body.removeChild(modalContent);
+  }
+  
+}
+
 /**
  * Función que permite crear un modal. Crea 2 elementos contenedores para el contenido.
  *
@@ -64,6 +76,7 @@ const printModal = (content) => {
   const removeModal = () => {
     document.body.removeChild(modalContainerEl);
   };
+  
 
   modalContainerEl.addEventListener("click", (e) => {
     if (e.target === modalContainerEl || e.target.classList.contains("cancelar")) {

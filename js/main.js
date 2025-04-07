@@ -454,9 +454,6 @@ async function run() {
     inRun = false
   }
   else {
-    document.getElementById("btn-run").innerHTML = "Pause"
-    inRun = true
-    console.log("run")
     if (population.length == 0) {
       alert("There is no population")
       return
@@ -469,6 +466,10 @@ async function run() {
       alert("DNA must only allow W, A, S, D")
       return
     }
+    
+    document.getElementById("btn-run").innerHTML = "Pause"
+    console.log("run")
+    inRun = true
     while (inRun) {
       //speed
       await sleep(document.getElementById("speed").value)

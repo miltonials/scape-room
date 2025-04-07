@@ -6,7 +6,7 @@ howToPlay_btn.addEventListener("click", () => {
   printModal(`
   <section>
         <h2 class="center title">How to play?</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/Yw6u6YkTgQ4?si=oCmJrKDi0hyL-Toy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/kmKBgAbhE_A?si=RphghefPGoVRz8_j" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <div class="btns-container">
           <button class="btn save" onclick="removeModal()">Close</button>
         </div>

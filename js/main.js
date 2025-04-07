@@ -108,12 +108,12 @@ function creationMatrix() {
   let randomcolumna = 0;
   if (obstacles > 0) {
     if (obstacles > dimensions * dimensions) {
-      alert("No se pueden colocar tantos obstáculos")
+      alert("Too many obstacles cannot be placed")
       return
     }
     // obstacles no debe ser mayor a 30%
     if (obstacles > (dimensions * dimensions) * 0.30) {
-      alert("No se pueden colocar tantos obstáculos")
+      alert("Too many obstacles cannot be placed")
       return
     }
     for (let i = 0; i < porcentaje; i++) {
@@ -147,12 +147,12 @@ function creationMatrix2() {
   let randomcolumna = 0;
   if (obstacles > 0) {
     if (obstacles > dimensions * dimensions) {
-      alert("No se pueden colocar tantos obstáculos")
+      alert("Too many obstacles cannot be placed")
       return
     }
     // obstacles no debe ser mayor a 30%
     if (obstacles > (dimensions * dimensions) * 0.30) {
-      alert("No se pueden colocar tantos obstáculos")
+      alert("Too many obstacles cannot be placed")
       return
     }
     if (premios > 0) {
@@ -458,15 +458,15 @@ async function run() {
     inRun = true
     console.log("run")
     if (population.length == 0) {
-      alert("No hay población")
+      alert("There is no population")
       return
     }
     if (matrix.length == 0) {
-      alert("No hay matriz")
+      alert("There is no matrix")
       return
     }
     if (validateADN()) {
-      alert("El ADN unicamente debe permitir W,A,S,D")
+      alert("DNA must only allow W, A, S, D")
       return
     }
     while (inRun) {
